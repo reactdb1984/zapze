@@ -20,7 +20,7 @@ const NavBar = ({history}) => {
     return (
         <div>
             <div>
-                <button as={Link} to='/' header>
+                <button as={Link} to='/' >
                     <img src='/assets/logo.png' alt='logo'/>
                     logo
                 </button>
@@ -30,7 +30,7 @@ const NavBar = ({history}) => {
                 {authenticated ? (
                     <SignedInMenu signOut={handleLogout}/>
                 ) : (
-                    <SignedOutMenu/>
+                    <SignedOutMenu/> 
                 )}
             </div>
         </div>

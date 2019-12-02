@@ -6,7 +6,7 @@ const SignedInMenu = ({signOut}) => {
    // const auth = useSelector(state => state.firebase.auth, []);
     return (
       <div>
-            <img avatar spaced='right' alt="profile pic"src={profile.photoURL || '/assets/user.png'}/>
+            <img  spaced='right' alt="profile pic"src={profile.photoURL || '/assets/user.png'}/>
            <p>text={profile.displayName}</p> 
  
                     <button onClick={signOut}  >sign out</button>

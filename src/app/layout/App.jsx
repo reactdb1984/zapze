@@ -25,6 +25,7 @@ import NavBar from "../../features/nav/navbar/NavBar";
 import NotFound from "./NotFound";
 import LoginForm from "../../features/auth/Login/LoginForm";
 import RegisterForm from "../../features/auth/Register/RegisterForm";
+import ProjectForm from "../../features/projects/ProjectForm/ProjectForm";
 
 const history = createBrowserHistory();
 const store = configureStore();
@@ -76,6 +77,7 @@ function App() {
                                 <Route exact path='/signin' component={LoginForm}/>
 
                                 <Route exact path='/register' component={RegisterForm}/>
+                                <Route exact path='/createproject' component={ProjectForm}/>
 
                                 <Route component={NotFound} />
                             </Switch>
