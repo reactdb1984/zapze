@@ -7,7 +7,8 @@ export const createProject = ({firebase, firestore}, project) => {
     return async (dispatch, getState) => {
         const user = firebase.auth().currentUser;
         const photoURL = getState().firebase.profile.photoURL;
-        const newProject = createNewProject(user, photoURL, project, firestore);
+        const date = Date.now();
+        const newProject = createNewProject(user, photoURL, project, firestore, date);
         try {
             let createdProject = await firestore.add('projects', newProject);
             await firestore.set(`project_contributors/${createdProject.id}_${user.uid}`, {
@@ -78,24 +79,24 @@ export const cancelToggle = ({firestore}, cancelled, projectId) =>
         }
     };
 
-export const getPagedEvents = ({firestore}) =>
+export const getPagedProjects = ({firestore}) =>
     async (dispatch, getState) => {
         dispatch(asyncActionStart());
         const LIMIT = 2;
-        let nextEventSnapshot = null;
-        const {firestore: {data: {events: items}}} = getState();
+        let nextProjectSnapshot = null;
+        const {firestore: {data: {projects: items}}} = getState();
         if (items && Object.keys(items).length >= LIMIT) {
             let itemsArray = objectToArray(items);
-            nextEventSnapshot = await firestore.collection('events').doc(itemsArray[itemsArray.length - 1].id).get();
+            nextProjectSnapshot = await firestore.collection('projects').doc(itemsArray[itemsArray.length - 1].id).get();
         }
 
         let querySnap = await firestore.get({
-            collection: 'events',
+            collection: 'projects',
             limit: LIMIT,
-            where: ['date', '>=', new Date()],
-            orderBy: ['date'],
-            startAfter: nextEventSnapshot,
-            storeAs: 'events'
+           
+            orderBy: ['title'],
+            startAfter: nextProjectSnapshot,
+            storeAs: 'projects'
         });
 
         if (querySnap.docs.length < LIMIT) {
@@ -104,22 +105,3 @@ export const getPagedEvents = ({firestore}) =>
         dispatch(asyncActionFinish());
     };
 
-export const addEventComment = ({firebase}, eventId, values, parentId) =>
-    async (dispatch, getState) => {
-        const profile = getState().firebase.profile;
-        const user = firebase.auth().currentUser;
-        let newComment = {
-            parentId: parentId,
-            displayName: profile.displayName,
-            photoURL: profile.photoURL || '/assets/user.png',
-            uid: user.uid,
-            text: values.comment,
-            date: Date.now()
-        };
-        try {
-            await firebase.push(`event_chat/${eventId}`, newComment);
-        } catch (error) {
-            console.log(error);
-            toastr.error('Oops', 'Problem adding comment');
-        }
-    };

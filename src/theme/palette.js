@@ -5,9 +5,9 @@ const white = '#FFFFFF';
 export default {
   primary: {
     contrastText: white,
-    dark: colors.indigo[900],
-    main: colors.indigo[500],
-    light: colors.indigo[100]
+    dark: colors.white[900],
+    main: colors.white[500],
+    light: colors.white[100]
   },
   secondary: {
     contrastText: white,

@@ -1,4 +1,4 @@
-import React, {  Fragment } from "react";
+import React, { Fragment } from "react";
 import { Router, Route, Switch } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import MomentUtils from "@date-io/moment";
@@ -8,16 +8,13 @@ import { ThemeProvider } from "@material-ui/styles";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import "react-perfect-scrollbar/dist/css/styles.css";
 import { theme } from "../theme";
-import  configureStore  from "../store/configureStore";
+import configureStore from "../store/configureStore";
 import ScrollReset from "../utils/ScrollReset";
-import { ReactReduxFirebaseProvider } from 'react-redux-firebase';
-import { createFirestoreInstance } from 'redux-firestore';
-import firebase from '../config/firebase';
-import ReduxToastr from 'react-redux-toastr';
-import 'react-redux-toastr/lib/css/react-redux-toastr.min.css';
-
-
-
+import { ReactReduxFirebaseProvider } from "react-redux-firebase";
+import { createFirestoreInstance } from "redux-firestore";
+import firebase from "../config/firebase";
+import ReduxToastr from "react-redux-toastr";
+import "react-redux-toastr/lib/css/react-redux-toastr.min.css";
 
 import ProjectDashboard from "../../features/projects/ProjectsDashboard/ProjectsDashboard";
 import HomePage from "../../features/HomePage";
@@ -31,7 +28,7 @@ const history = createBrowserHistory();
 const store = configureStore();
 
 const rrfConfig = {
-  userProfile: 'users',
+  userProfile: "users",
   attachAuthIsReady: true,
   useFirestoreForProfile: true,
   updateProfileOnLogin: false
@@ -44,52 +41,55 @@ const rrfProps = {
   createFirestoreInstance
 };
 
-
 function App() {
-
   return (
     <div className="App">
       <StoreProvider store={store}>
-      <ReactReduxFirebaseProvider {...rrfProps}>
+        <ReactReduxFirebaseProvider {...rrfProps}>
+          <ThemeProvider theme={theme}>
+            <MuiPickersUtilsProvider utils={MomentUtils}>
+              <Router history={history}>
+                <ScrollReset />
+                <ReduxToastr
+                  position="bottom-right"
+                  transitionIn="fadeIn"
+                  transitionOut="fadeOut"
+                />
+                <Switch>
+                  <Route exact path="/" component={HomePage} />
+                  <Route exact path="/signin" component={LoginForm} />
 
-        <ThemeProvider theme={ theme}>
-          <MuiPickersUtilsProvider utils={MomentUtils}>
-           
-            <Router history={history}>
-             
-              <ScrollReset />
-              <ReduxToastr
-              position='bottom-right'
-              transitionIn='fadeIn'
-              transitionOut='fadeOut'
-            />
-                          <Switch>
-                <Route exact path='/' component={HomePage}/>
-            </Switch>
-            <Route
-                path='/(.+)'
-                render={() => (
+                  <Route exact path="/register" component={RegisterForm} />
+                </Switch>
+                <Route
+                  path="/(.+)"
+                  render={() => (
                     <Fragment>
-                        <NavBar/>
-                        <div className='main'>
-                            <Switch>
-                                <Route exact path='/projects' component={ProjectDashboard}/>
-                                <Route exact path='/signin' component={LoginForm}/>
+                      <NavBar />
+                      <div className="main">
+                        <Switch>
+                          <Route
+                            exact
+                            path="/projects"
+                            component={ProjectDashboard}
+                          />
 
-                                <Route exact path='/register' component={RegisterForm}/>
-                                <Route exact path='/createproject' component={ProjectForm}/>
+                          <Route
+                            exact
+                            path="/createproject"
+                            component={ProjectForm}
+                          />
 
-                                <Route component={NotFound} />
-                            </Switch>
-                        </div>
+                          <Route component={NotFound} />
+                        </Switch>
+                      </div>
                     </Fragment>
-                )}
-            />
-            </Router>
-          </MuiPickersUtilsProvider>
-        </ThemeProvider>
+                  )}
+                />
+              </Router>
+            </MuiPickersUtilsProvider>
+          </ThemeProvider>
         </ReactReduxFirebaseProvider>
-
       </StoreProvider>
     </div>
   );
